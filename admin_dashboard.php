@@ -57,7 +57,7 @@ if (isset($_GET['action_status']) && isset($_GET['id_b'])) {
 
     try {
         if ($act_status === 'Paid') {
-            // Validasi Pembayaran biasa & Ubah status vila jadi disewa
+            // Validasi Pembayaran biasa & Ubah status vila jadi Tidak Tersedia
             $pdo->beginTransaction();
             $stmt1 = $pdo->prepare("UPDATE booking SET status_booking = 'Paid' WHERE id_booking = :id");
             $stmt1->execute(['id' => $id_b]);
@@ -66,7 +66,7 @@ if (isset($_GET['action_status']) && isset($_GET['id_b'])) {
             $stmtGetVila->execute(['id' => $id_b]);
             $vId = $stmtGetVila->fetchColumn();
             
-            $stmt2 = $pdo->prepare("UPDATE vila SET status = 'Disewa' WHERE id_vila = :vid");
+            $stmt2 = $pdo->prepare("UPDATE vila SET status = 'Tidak Tersedia' WHERE id_vila = :vid");
             $stmt2->execute(['vid' => $vId]);
             $pdo->commit();
             
@@ -183,6 +183,9 @@ if (isset($_POST['btn_backup_otomatis'])) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Tambahan Library SweetAlert2 Agar Pop-up Menjadi Cantik dan Mewah -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -353,6 +356,7 @@ if (isset($_POST['btn_backup_otomatis'])) {
                             <th>Nama Customer</th>
                             <th>Unit Vila Pilihan</th>
                             <th style="text-align: center;">Status Transaksi</th>
+                            <th style="text-align: center; width: 180px;">Aksi Pembaruan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -371,6 +375,23 @@ if (isset($_POST['btn_backup_otomatis'])) {
                                     <span class="badge badge-warning">Pending</span>
                                 <?php else: ?>
                                     <span class="badge badge-danger">Cancelled</span>
+                                <?php endif; ?>
+                            </td>
+                            <td style="text-align: center;">
+                                <?php if($r['status_booking'] == 'Pending'): ?>
+                                    <a href="?tab=reservasi_global&action_status=Paid&id_b=<?= $r['id_booking'] ?>" 
+                                       style="background-color: var(--success); color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; display: inline-block;">
+                                       Validasi
+                                    </a>
+                                <?php elseif($r['status_booking'] == 'Paid'): ?>
+                                    <!-- Diubah onclick-nya agar memanggil SweetAlert instan -->
+                                    <a href="?tab=reservasi_global&action_status=Cancelled&id_b=<?= $r['id_booking'] ?>" 
+                                       style="background-color: var(--danger-text); color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; display: inline-block;"
+                                       onclick="konfirmasiPembatalan(event, this.href)">
+                                       Batalkan
+                                    </a>
+                                <?php else: ?>
+                                    <span style="color: #9ca3af; font-size: 12px; font-style: italic;">Selesai Audit</span>
                                 <?php endif; ?>
                             </td>
                         </tr>
@@ -467,5 +488,30 @@ if (isset($_POST['btn_backup_otomatis'])) {
 
     </div>
 
+    <!-- Script Pembuat Pop-Up Interaktif Mewah -->
+    <script>
+    function konfirmasiPembatalan(event, redirectUrl) {
+        event.preventDefault(); // Menahan link asli agar tidak langsung pindah halaman
+        
+        Swal.fire({
+            title: 'Apakah Anda Yakin?',
+            text: "Tindakan pembatalan transaksi lunas ini akan otomatis memicu Trigger sistem untuk mencatat Audit Log ke Log_Pembatalan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444', // Warna Merah Mewah
+            cancelButtonColor: '#6b7280',  // Warna Abu-abu Elegan
+            confirmButtonText: 'Ya, Batalkan!',
+            cancelButtonText: 'Batal',
+            background: '#fffdf9', // Menyerasikan dengan tone cream website-mu
+            color: '#4a3728',     // Font cokelat gelap elegan
+            borderRadius: '12px'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika admin klik "Ya, Batalkan!", jalankan URL proses triggernya
+                window.location.href = redirectUrl;
+            }
+        });
+    }
+    </script>
 </body>
 </html>
