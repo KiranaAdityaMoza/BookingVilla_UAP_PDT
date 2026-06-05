@@ -129,7 +129,7 @@ if (isset($_POST['btn_backup'])) {
 // =========================================================================
 $deadlock_log = [];
 if (isset($_POST['run_deadlock'])) {
-    $deadlock_log[] = "🚀 Memulai Simulasi Transaksi Konkuren (2 Proses Bersamaan)...";
+    $deadlock_log[] = "Memulai Simulasi Transaksi Konkuren (2 Proses Bersamaan)...";
     
     // Kita simulasikan konflik dengan sengaja menggunakan 2 query transaksi berurutan cepat
     // Menggunakan teknik Try-Catch PDO Exception handling
@@ -151,13 +151,13 @@ if (isset($_POST['run_deadlock'])) {
         
         // Transaksi Berhasil diselesaikan (Penanganan Sukses)
         $pdo->commit();
-        $deadlock_log[] = "✅ [Transaksi Selesai]: Tidak terjadi kebocoran data. Status aman ter-COMMIT!";
+        $deadlock_log[] = "[Transaksi Selesai]: Tidak terjadi kebocoran data. Status aman ter-COMMIT!";
         $deadlock_status = "success";
     } catch (PDOException $e) {
         $pdo->rollBack(); // OTOMATIS ROLLBACK JIKA GAGAL/TABRAKAN
-        $deadlock_log[] = "🚨 [TRANSAKSI GAGAL]: Terdeteksi Tabrakan Data Operasional (Deadlock)!";
-        $deadlock_log[] = "🛡️ [Sistem Penanganan]: Mesin melakukan AUTOMATIC ROLLBACK demi menjaga keutuhan saldo.";
-        $deadlock_log[] = "🔄 [Solusi Otomatis]: Mengaktifkan perintah RETRY (Mencoba ulang proses kembali)...";
+        $deadlock_log[] = "[TRANSAKSI GAGAL]: Terdeteksi Tabrakan Data Operasional (Deadlock)!";
+        $deadlock_log[] = "[Sistem Penanganan]: Mesin melakukan AUTOMATIC ROLLBACK demi menjaga keutuhan saldo.";
+        $deadlock_log[] = "[Solusi Otomatis]: Mengaktifkan perintah RETRY (Mencoba ulang proses kembali)...";
         $deadlock_status = "danger";
     }
 }
@@ -166,27 +166,31 @@ if (isset($_POST['run_deadlock'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Admin Pusat - Jaringan Vila</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
         .sidebar { height: 100vh; position: fixed; width: 260px; }
         .main-content { margin-left: 260px; width: calc(100% - 260px); }
-        .tab-link.active { background-color: #0284c7 !important; color: white !important; font-weight: bold; }
+        .tab-link.active { background-color: #1e293b !important; color: white !important; font-weight: 600; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <h2>🏢 Admin Kendali</h2>
-        <p style="text-align: center; font-size:11px; margin-bottom:20px; color:#94a3b8;">Sistem Jaringan Terdistribusi</p>
+        <h2>Admin Kendali</h2>
+        <p style="text-align: center; font-size:11px; margin-bottom:20px; color:#94a3b8; letter-spacing: 0.5px;">Sistem Jaringan Terdistribusi</p>
         
-        <a href="?tab=manajemen_vila" class="tab-link <?= $tab === 'manajemen_vila' ? 'active' : ''; ?>">📦 CRUD Master Vila (SP)</a>
-        <a href="?tab=vila_pantai" class="tab-link <?= $tab === 'vila_pantai' ? 'active' : ''; ?>">🏖️ Wilayah Pantai (View)</a>
-        <a href="?tab=reservasi_global" class="tab-link <?= $tab === 'reservasi_global' ? 'active' : ''; ?>">📅 Validasi Reservasi (Join)</a>
-        <a href="?tab=rekap_omzet" class="tab-link <?= $tab === 'rekap_omzet' ? 'active' : ''; ?>">💰 Rekap Kas Wilayah (Union)</a>
-        <a href="?tab=log_audit" class="tab-link <?= $tab === 'log_audit' ? 'active' : ''; ?>">⚠️ Log Kritis Audit (Trigger)</a>
-        <a href="?tab=pemeliharaan" class="tab-link <?= $tab === 'pemeliharaan' ? 'active' : ''; ?>">💾 Cadangan Data & Task</a>
-        <a href="?tab=deadlock" class="tab-link <?= $tab === 'deadlock' ? 'active' : ''; ?>">⚡ Konsol Deadlock (Transaksi)</a>
+        <a href="?tab=manajemen_vila" class="tab-link <?= $tab === 'manajemen_vila' ? 'active' : ''; ?>">Master Vila (SP)</a>
+        <a href="?tab=vila_pantai" class="tab-link <?= $tab === 'vila_pantai' ? 'active' : ''; ?>">Katalog WIlayah</a>
+        <a href="?tab=reservasi_global" class="tab-link <?= $tab === 'reservasi_global' ? 'active' : ''; ?>">Validasi Reservasi</a>
+        <a href="?tab=rekap_omzet" class="tab-link <?= $tab === 'rekap_omzet' ? 'active' : ''; ?>">Rekap Kas Wilayah</a>
+        <a href="?tab=log_audit" class="tab-link <?= $tab === 'log_audit' ? 'active' : ''; ?>">Log Kritis Audit (Trigger)</a>
+        <a href="?tab=pemeliharaan" class="tab-link <?= $tab === 'pemeliharaan' ? 'active' : ''; ?>">Cadangan Data & Task</a>
+        <a href="?tab=deadlock" class="tab-link <?= $tab === 'deadlock' ? 'active' : ''; ?>">Konsol Deadlock (Transaksi)</a>
         
         <a href="logout.php" class="logout">Keluar Sistem</a>
     </div>
@@ -202,22 +206,22 @@ if (isset($_POST['run_deadlock'])) {
                 <h2>📦 CRUD Pengelolaan Kamar Vila Cabang</h2>
                 <p style="color:#64748b;">Menerapkan <b>Materi 6: Stored Procedure</b> menggunakan pemanggilan <code>CALL sp_manage_vila()</code> di backend PHP.</p>
                 
-                <form action="" method="POST" style="background:#f8fafc; padding:20px; border-radius:6px; margin-bottom:20px; border:1px solid #e2e8f0;">
+                <form action="" method="POST" class="crud-form-container">
                     <input type="hidden" name="action_crud" value="INSERT">
-                    <h3 style="margin-bottom:10px; font-size:16px;">➕ Tambah Unit Vila Baru</h3>
-                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+                    <h3>➕ Tambah Unit Vila Baru</h3>
+                    <div class="grid-3-col">
                         <input type="text" name="id_vila" placeholder="ID Vila (Contoh: V11)" class="form-control" required>
                         <input type="text" name="nama_vila" placeholder="Nama Vila" class="form-control" required>
-                        <select name="klaster" class="form-control">
+                        <select name="klaster" class="form-control" style="cursor: pointer;">
                             <option value="Puncak">Klaster Puncak</option>
                             <option value="Pantai">Klaster Pantai</option>
                         </select>
                     </div>
-                    <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-top:10px;">
+                    <div class="grid-2-col">
                         <input type="text" name="alamat" placeholder="Alamat Lengkap Properti..." class="form-control" required>
                         <input type="number" name="harga_per_malam" placeholder="Harga per Malam (Rupiah)" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-success" style="margin-top:10px; width:100%;">Simpan Unit Baru Ke Database</button>
+                    <button type="submit" class="btn btn-success btn-block">Simpan Unit Baru Ke Database</button>
                 </form>
 
                 <table>
@@ -229,37 +233,36 @@ if (isset($_POST['run_deadlock'])) {
                             <th>Alamat Lokasi</th>
                             <th>Harga Per Malam</th>
                             <th>Status Kamar</th>
-                            <th>Aksi Operasional</th>
+                            <th style="text-align: center;">Aksi Operasional</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        // Memanggil operasi SELECT dari Stored Procedure
                         $stmtVila = $pdo->query("SELECT * FROM vila ORDER BY id_vila ASC");
                         while ($v = $stmtVila->fetch()) {
                             echo "<tr>";
                             echo "<td><b>{$v['id_vila']}</b></td>";
                             echo "<td>{$v['nama_vila']}</td>";
-                            echo "<td><span class='badge' style='background:#e2e8f0;'>{$v['klaster']}</span></td>";
+                            echo "<td><span class='badge badge-secondary'>{$v['klaster']}</span></td>";
                             echo "<td>{$v['alamat']}</td>";
                             echo "<td>Rp ".number_format($v['harga_per_malam'], 0, ',', '.')."</td>";
                             echo "<td>".($v['status']=='Tersedia' ? "<span class='badge badge-success'>Tersedia</span>" : "<span class='badge badge-danger'>Disewa</span>")."</td>";
-                            echo "<td>
-                                    <form action='' method='POST' style='display:inline-block; margin-bottom:0;'>
+                            echo "<td style='text-align: center;'>
+                                    <form action='' method='POST' class='form-inline-table'>
                                         <input type='hidden' name='action_crud' value='UPDATE'>
                                         <input type='hidden' name='id_vila' value='{$v['id_vila']}'>
-                                        <input type='number' name='harga_per_malam' value='{$v['harga_per_malam']}' style='width:90px; padding:3px; font-size:12px;'>
-                                        <select name='status' style='padding:3px; font-size:12px;'>
+                                        <input type='number' name='harga_per_malam' value='{$v['harga_per_malam']}' class='form-control input-table-price'>
+                                        <select name='status' class='select-table-status'>
                                             <option value='Tersedia' ".($v['status']=='Tersedia'?'selected':'').">Tersedia</option>
                                             <option value='Disewa' ".($v['status']=='Disewa'?'selected':'').">Disewa</option>
                                         </select>
-                                        <button type='submit' class='btn btn-primary' style='padding:3px 6px; font-size:11px;'>Ubah</button>
+                                        <button type='submit' class='btn btn-primary'>Ubah</button>
                                     </form>
                                     
                                     <form action='' method='POST' style='display:inline-block; margin-bottom:0;' onsubmit='return confirm(\"Hapus properti ini?\")'>
                                         <input type='hidden' name='action_crud' value='DELETE'>
                                         <input type='hidden' name='id_vila' value='{$v['id_vila']}'>
-                                        <button type='submit' class='btn btn-danger' style='padding:3px 6px; font-size:11px;'>Hapus</button>
+                                        <button type='submit' class='btn btn-danger'>Hapus</button>
                                     </form>
                                   </td>";
                             echo "</tr>";
@@ -270,39 +273,103 @@ if (isset($_POST['run_deadlock'])) {
             </div>
 
         <?php elseif ($tab === 'vila_pantai'): ?>
+            <?php
+            // Mengambil nilai filter dari URL (jika ada), default-nya 'Semua'
+            $filter_kategori = isset($_GET['filter_kategori']) ? $_GET['filter_kategori'] : 'Semua';
+            ?>
+
             <div class="card">
-                <h2>🏖️ Katalog Khusus Wilayah Vila Pantai (Aktif)</h2>
-                <p style="color:#64748b;">Menerapkan <b>Materi 1: Database Views</b>. Data di bawah ditarik langsung objek virtual view <code>view_vila_pantai_aktif</code> (Hanya menyaring klaster Pantai yang berstatus Tersedia saja).</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID Properti</th>
-                            <th>Nama Vila Pantai</th>
-                            <th>Alamat Lengkap</th>
-                            <th>Harga Sewa / Malam</th>
-                            <th>Status Terkini</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $stmtView = $pdo->query("SELECT * FROM view_vila_pantai_aktif");
-                        $rowsView = $stmtView->fetchAll();
-                        if (count($rowsView) == 0) {
-                            echo "<tr><td colspan='5' style='text-align:center;'>Tidak ada vila pantai yang sedang berstatus tersedia saat ini.</td></tr>";
-                        } else {
-                            foreach ($rowsView as $vp) {
-                                echo "<tr>
-                                        <td><b>{$vp['id_vila']}</b></td>
-                                        <td>{$vp['nama_vila']}</td>
-                                        <td>{$vp['alamat']}</td>
-                                        <td>Rp ".number_format($vp['harga_per_malam'], 0, ',', '.')."</td>
-                                        <td><span class='badge badge-success'>{$vp['status']}</span></td>
-                                      </tr>";
+                <h2>🗺️ Katalog Wilayah Distribusi Vila</h2>
+                <p style="color:#64748b; margin-bottom: 20px;">
+                    Menerapkan <b>Materi 1: Database Views</b>. Menampilkan data real-time langsung dari filter query view spesifik.
+                </p>
+                
+                <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 25px; display: flex; align-items: center; gap: 15px;">
+                    <form method="GET" action="" style="display: flex; align-items: center; gap: 10px; margin-bottom: 0; width: 100%;">
+                        <input type="hidden" name="tab" value="vila_pantai">
+                        
+                        <label for="filter_kategori" style="font-weight: 600; color: #334155; font-size: 14px;">Filter Wilayah / Kategori:</label>
+                        <select name="filter_kategori" id="filter_kategori" class="form-control" style="width: 200px; cursor: pointer; padding: 5px 10px;">
+                            <option value="Semua" <?= $filter_kategori === 'Semua' ? 'selected' : ''; ?>>Semua Wilayah</option>
+                            <option value="Pantai" <?= $filter_kategori === 'Pantai' ? 'selected' : ''; ?>>Klaster Pantai</option>
+                            <option value="Puncak" <?= $filter_kategori === 'Puncak' ? 'selected' : ''; ?>>Klaster Puncak</option>
+                        </select>
+                        
+                        <button type="submit" class="btn btn-primary" style="padding: 7px 15px; font-size: 13px;">Terapkan Filter</button>
+                    </form>
+                </div>
+
+                <?php if ($filter_kategori === 'Semua' || $filter_kategori === 'Pantai'): ?>
+                    <h3 style="margin-top: 20px; margin-bottom: 10px; color: #0f172a; font-size: 16px;">🏖️ Katalog Khusus Wilayah Vila Pantai (Aktif)</h3>
+                    <table style="margin-bottom: 30px;">
+                        <thead>
+                            <tr>
+                                <th>ID Properti</th>
+                                <th>Nama Vila</th>
+                                <th>Alamat Lengkap</th>
+                                <th>Harga Sewa / Malam</th>
+                                <th>Status Terkini</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $stmtViewPantai = $pdo->query("SELECT * FROM view_vila_pantai_aktif");
+                            $rowsPantai = $stmtViewPantai->fetchAll();
+                            if (count($rowsPantai) == 0) {
+                                echo "<tr><td colspan='5' style='text-align:center; color:#64748b;'>Tidak ada vila pantai yang sedang berstatus tersedia saat ini.</td></tr>";
+                            } else {
+                                foreach ($rowsPantai as $vp) {
+                                    echo "<tr>
+                                            <td><b>{$vp['id_vila']}</b></td>
+                                            <td>{$vp['nama_vila']}</td>
+                                            <td>{$vp['alamat']}</td>
+                                            <td>Rp ".number_format($vp['harga_per_malam'], 0, ',', '.')."</td>
+                                            <td><span class='badge badge-success'>{$vp['status']}</span></td>
+                                          </tr>";
+                                }
                             }
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                            ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+
+                <?php if ($filter_kategori === 'Semua' || $filter_kategori === 'Puncak'): ?>
+                    <h3 style="margin-top: 20px; margin-bottom: 10px; color: #0f172a; font-size: 16px;">🏡 Katalog Khusus Wilayah Vila Puncak (Aktif)</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Properti</th>
+                                <th>Nama Vila</th>
+                                <th>Alamat Lengkap</th>
+                                <th>Harga Sewa / Malam</th>
+                                <th>Status Terkini</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            try {
+                                $stmtViewPuncak = $pdo->query("SELECT * FROM view_vila_puncak_aktif");
+                                $rowsPuncak = $stmtViewPuncak->fetchAll();
+                                if (count($rowsPuncak) == 0) {
+                                    echo "<tr><td colspan='5' style='text-align:center; color:#64748b;'>Tidak ada vila puncak yang sedang berstatus tersedia saat ini.</td></tr>";
+                                } else {
+                                    foreach ($rowsPuncak as $vpu) {
+                                        echo "<tr>
+                                                <td><b>{$vpu['id_vila']}</b></td>
+                                                <td>{$vpu['nama_vila']}</td>
+                                                <td>{$vpu['alamat']}</td>
+                                                <td>Rp ".number_format($vpu['harga_per_malam'], 0, ',', '.')."</td>
+                                                <td><span class='badge badge-success'>{$vpu['status']}</span></td>
+                                              </tr>";
+                                    }
+                                }
+                            } catch (PDOException $e) {
+                                echo "<tr><td colspan='5' style='text-align:center; color:red;'>Gagal memuat data view puncak: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
             </div>
 
         <?php elseif ($tab === 'reservasi_global'): ?>
@@ -320,7 +387,7 @@ if (isset($_POST['run_deadlock'])) {
                             <th>Durasi</th>
                             <th>Total Bersih</th>
                             <th>Status Transaksi</th>
-                            <th>Aksi Admin</th>
+                            <th style="text-align: center;">Aksi Admin</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -335,7 +402,7 @@ if (isset($_POST['run_deadlock'])) {
                                         <td><b>#B0{$r['id_booking']}</b></td>
                                         <td style='letter-spacing:0.5px; font-weight:600; color:#0f172a;'>{$r['nama_customer_kapital']}</td>
                                         <td>{$r['nama_vila']}</td>
-                                        <td><span class='badge' style='background:#f1f5f9;'>{$r['klaster']}</span></td>
+                                        <td><span class='badge badge-secondary'>{$r['klaster']}</span></td>
                                         <td>".date('d M Y', strtotime($r['tgl_checkin']))."</td>
                                         <td>{$r['durasi_malam']} Malam</td>
                                         <td style='font-weight:bold; color:#16a34a;'>Rp ".number_format($r['total_bayar_bersih'], 0, ',', '.')."</td>
@@ -344,13 +411,13 @@ if (isset($_POST['run_deadlock'])) {
                                         elseif ($r['status_booking'] == 'Paid') echo "<span class='badge badge-success'>Paid (Lunas)</span>";
                                         else echo "<span class='badge badge-danger'>Cancelled</span>";
                                 echo "</td>
-                                        <td>";
+                                        <td style='text-align: center;'>";
                                         if ($r['status_booking'] == 'Pending') {
-                                            echo "<a href='?tab=reservasi_global&action_status=Paid&id_b={$r['id_booking']}' class='btn btn-success' style='padding:3px 8px; font-size:12px; text-decoration:none;'>Sahkan Pembayaran</a>";
+                                            echo "<a href='?tab=reservasi_global&action_status=Paid&id_b={$r['id_booking']}' class='btn btn-success'>Sahkan Pembayaran</a>";
                                         } elseif ($r['status_booking'] == 'Paid') {
-                                            echo "<a href='?tab=reservasi_global&action_status=Cancelled&id_b={$r['id_booking']}' class='btn btn-danger' style='padding:3px 8px; font-size:12px; text-decoration:none;' onclick='return confirm(\"Batalkan paksa sewa lunas ini? Tindakan ini akan memicu log audit trigger!\")'>Batalkan Sewa</a>";
+                                            echo "<a href='?tab=reservasi_global&action_status=Cancelled&id_b={$r['id_booking']}' class='btn btn-danger' onclick='return confirm(\"Batalkan paksa sewa lunas ini? Tindakan ini akan memicu log audit trigger!\")'>Batalkan Sewa</a>";
                                         } else {
-                                            echo "<span style='color:#94a3b8; font-size:12px;'>Selesai di-audit</span>";
+                                            echo "<span style='color:#94a3b8; font-size:13px; font-weight:500;'>Selesai di-audit</span>";
                                         }
                                 echo "</td>
                                       </tr>";
@@ -376,11 +443,11 @@ if (isset($_POST['run_deadlock'])) {
                     </thead>
                     <tbody>
                         <?php
-                        $stmtUnion = $pdo->query("SELECT * FROM view_rekap_wilayah");
-                        $rowsUnion = $stmtUnion->fetchAll();
+                        $tabUnion = $pdo->query("SELECT * FROM view_rekap_wilayah");
+                        $rowsUnion = $tabUnion->fetchAll();
                         $grand_total = 0;
                         if (count($rowsUnion) == 0) {
-                            echo "<tr><td colspan='3' style='text-align:center;'>Belum ada dana masuk di kas wilayah manapun.</td></tr>";
+                            echo "<tr><td colspan='3' style='text-align:center; color:#64748b;'>Belum ada dana masuk di kas wilayah manapun.</td></tr>";
                         } else {
                             foreach ($rowsUnion as $idx => $u) {
                                 $grand_total += $u['total_bayar_bersih'];
@@ -390,9 +457,9 @@ if (isset($_POST['run_deadlock'])) {
                                         <td style='color:#16a34a; font-weight:600;'>Rp ".number_format($u['total_bayar_bersih'], 0, ',', '.')."</td>
                                       </tr>";
                             }
-                            echo "<tr style='background:#f1f5f9; font-weight:bold; font-size:16px;'>
-                                    <td colspan='2' style='text-align:right;'>TOTAL GABUNGAN OMZET OPERASIONAL:</td>
-                                    <td style='color:#0284c7;'>Rp ".number_format($grand_total, 0, ',', '.')."</td>
+                            echo "<tr style='background:#f8fafc; font-weight:bold; font-size:15px;'>
+                                    <td colspan='2' style='text-align:right; color:#475569;'>TOTAL GABUNGAN OMZET OPERASIONAL:</td>
+                                    <td style='color:#2563eb; font-size:16px;'>Rp ".number_format($grand_total, 0, ',', '.')."</td>
                                   </tr>";
                         }
                         ?>
@@ -439,20 +506,20 @@ if (isset($_POST['run_deadlock'])) {
         <?php elseif ($tab === 'pemeliharaan'): ?>
             <div class="card">
                 <h2>💾 Pemeliharaan, Pencadangan Instan & Task Scheduler</h2>
-                <p style="color:#64748b; margin-bottom:20px;">Menerapkan <b>Bonus Materi: Backup Database & Dokumentasi Task Scheduler</b> demi kelangsungan keamanan data.</p>
+                <p style="color:#64748b;">Menerapkan <b>Bonus Materi: Backup Database & Dokumentasi Task Scheduler</b> demi kelangsungan keamanan data.</p>
                 
-                <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:20px; border-radius:6px; margin-bottom:25px;">
-                    <h3>⚡ Fitur Backup 1-Klik</h3>
-                    <p style="font-size:14px; color:#166534; margin-bottom:15px;">Klik tombol di bawah untuk membuat file kloning data <code>.sql</code> di dalam direktori folder Laragon secara instan.</p>
-                    <form action="" method="POST">
-                        <button type="submit" name="btn_backup" class="btn btn-success">Mulai Proses Backup Database Sekarang</button>
+                <div style="background:#f0fdf4; border:1px solid #bbf7d0; padding:24px; border-radius:8px; margin-bottom:24px;">
+                    <h3 style="color:#166534; margin-bottom:8px; font-size:16px; font-weight:600;">⚡ Fitur Backup 1-Klik</h3>
+                    <p style="font-size:14px; color:#166534; margin-bottom:16px;">Klik tombol di bawah untuk membuat file kloning data <code>.sql</code> di dalam direktori folder Laragon secara instan.</p>
+                    <form action="" method="POST" style="margin-bottom:0;">
+                        <button type="submit" name="btn_backup" class="btn btn-success" style="padding:10px 20px; font-size:13px;">Mulai Proses Backup Database Sekarang</button>
                     </form>
                 </div>
 
-                <div style="background:#fafafa; border:1px solid #e2e8f0; padding:20px; border-radius:6px;">
-                    <h3>🕒 Implementasi Task Scheduler / Cron Job (Dokumentasi Arsitektur)</h3>
-                    <p style="font-size:14px; color:#475569; margin-bottom:10px;">Untuk melakukan otomasi pembersihan data sampah, tim pengembang memasang skrip Event Scheduler di server MySQL yang berjalan otomatis setiap 24 jam sekali:</p>
-                    <pre style="background:#1e293b; color:#38bdf8; padding:15px; border-radius:6px; overflow-x:auto; font-family:monospace; font-size:13px;">
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; padding:24px; border-radius:8px;">
+                    <h3 style="color:#1e293b; margin-bottom:8px; font-size:16px; font-weight:600;">Implementasi Task Scheduler / Cron Job (Dokumentasi Arsitektur)</h3>
+                    <p style="font-size:14px; color:#475569; margin-bottom:14px;">Untuk melakukan otomasi pembersihan data sampah, tim pengembang memasang skrip Event Scheduler di server MySQL yang berjalan otomatis setiap 24 jam sekali:</p>
+                    <pre style="background:#0f172a; color:#38bdf8; padding:18px; border-radius:8px; overflow-x:auto; font-family: monospace; font-size:13px; line-height:1.5;">
 CREATE EVENT IF NOT EXISTS ev_bersihkan_sampah_booking
 ON SCHEDULE EVERY 1 DAY
 DO
@@ -464,16 +531,16 @@ DO
 
         <?php elseif ($tab === 'deadlock'): ?>
             <div class="card">
-                <h2>⚡ Konsol Pengujian Simulasi Konflik Transaksi (Deadlock)</h2>
-                <p style="color:#64748b; margin-bottom:20px;">Menerapkan <b>Materi 4 (Transaction: BEGIN, COMMIT, ROLLBACK)</b> dan <b>Bonus (Deadlock Simulation & Retry Penanganan)</b>.</p>
+                <h2>Konsol Pengujian Simulasi Konflik Transaksi (Deadlock)</h2>
+                <p style="color:#64748b;">Menerapkan <b>Materi 4 (Transaction: BEGIN, COMMIT, ROLLBACK)</b> dan <b>Bonus (Deadlock Simulation & Retry Penanganan)</b>.</p>
                 
-                <form action="" method="POST" style="margin-bottom:20px;">
-                    <button type="submit" name="run_deadlock" class="btn btn-danger" style="padding:12px 25px;">Simulasikan Tabrakan Data Konkuren (2 Proses Serentak)</button>
+                <form action="" method="POST" style="margin-bottom:24px;">
+                    <button type="submit" name="run_deadlock" class="btn btn-danger" style="padding:12px 24px; font-size:14px; font-weight:600; border-radius:8px;">Simulasikan Tabrakan Data Konkuren (2 Proses Serentak)</button>
                 </form>
 
                 <?php if (!empty($deadlock_log)): ?>
-                    <div style="background:#0f172a; color:#f8fafc; padding:20px; border-radius:8px; font-family:'Courier New', Courier, monospace; font-size:14px; line-height:1.7; border-left:5px solid <?= $deadlock_status=='success'?'#10b981':'#ef4444'; ?>;">
-                        <h3 style="color:#38bdf8; font-size:15px; margin-bottom:10px; font-family:sans-serif;">📟 OUTPUT CONSOLE LOG MESIN DATABASE:</h3>
+                    <div style="background:#0f172a; color:#f8fafc; padding:24px; border-radius:8px; font-family:'Courier New', Courier, monospace; font-size:14px; line-height:1.7; border-left:5px solid <?= $deadlock_status=='success'?'#10b981':'#ef4444'; ?>;">
+                        <h3 style="color:#38bdf8; font-size:15px; margin-bottom:12px; font-family:sans-serif; font-weight:600;">📟 OUTPUT CONSOLE LOG MESIN DATABASE:</h3>
                         <?php foreach($deadlock_log as $log): ?>
                             <p style="margin-bottom:4px;"><?= htmlspecialchars($log); ?></p>
                         <?php endforeach; ?>

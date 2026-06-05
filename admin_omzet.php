@@ -28,7 +28,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
     <div class="main-content">
         <div class="card">
-            <h2>💰 Rekapitulasi Arus Kas Omzet Wilayah</h2>
+            <h2>Rekapitulasi Arus Kas Omzet Wilayah</h2>
             <p style="color:#64748b; margin-bottom: 15px;">Menerapkan <b>Materi 3: Set Operations (UNION ALL)</b> melalui objek view <code>view_rekap_wilayah</code> untuk menggabungkan dua segmen kelompok wilayah cabang berbeda.</p>
             
             <table>

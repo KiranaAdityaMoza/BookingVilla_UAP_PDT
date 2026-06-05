@@ -1,170 +1,535 @@
-* {
-    margin: 0;
-    padding: 0;
+:root {
+    --primary: #2563eb;
+    --sidebar-bg: #0f172a;
+    --bg-body: #f8fafc;
+    --border: #e2e8f0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: var(--bg-body); color: #1e293b; font-family: 'Inter', system-ui, sans-serif; display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar { width: 260px; background-color: var(--sidebar-bg); color: #f8fafc; padding: 24px; display: flex; flex-direction: column; }
+.sidebar h2 { font-size: 16px; margin-bottom: 24px; color: #fff; }
+.sidebar a { color: #94a3b8; text-decoration: none; padding: 10px; font-size: 14px; border-radius: 6px; margin-bottom: 4px; display: block; }
+.sidebar a:hover, .sidebar a.active { background-color: #1e293b; color: #fff; }
+.sidebar .logout { margin-top: auto; color: #f87171; border: 1px solid #f87171; text-align: center; }
+
+/* Main Content */
+.main-content { flex: 1; padding: 40px; overflow-y: auto; }
+.card { background: #fff; border: 1px solid var(--border); padding: 24px; border-radius: 12px; margin-bottom: 24px; }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+th { text-align: left; padding: 12px; border-bottom: 2px solid var(--border); color: #64748b; font-size: 12px; text-transform: uppercase; }
+td { padding: 16px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+tr:hover { background-color: #f1f5f9; }
+
+/* Components */
+.btn { padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; border: none; font-weight: 500; display: inline-block; text-decoration: none; }
+.btn-success { background: #dcfce7; color: #166534; }
+.btn-danger { background: #fee2e2; color: #991b1b; }
+.badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-success { background: #dcfce7; color: #166534; }
+.badge-warning { background: #fef9c3; color: #854d0e; }
+.alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; border: 1px solid; }
+.alert-success { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+
+/* ==========================================================================
+   Login Page Specific Styles
+   ========================================================================== */
+
+/* Memastikan layout body khusus login berpusat di tengah layar */
+.login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: var(--bg-body);
+}
+
+/* Card pembungkus form login */
+.login-box {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+}
+
+/* Grouping form label dan input */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #334155; /* Slate 700 */
+}
+
+/* Styling input field biar minimalis */
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: #1e293b;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efek focus indicator yang modern */
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Utility tombol primary bawaan login */
+.btn-primary {
+    background-color: var(--primary);
+    color: #ffffff;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8; /* Blue 700 */
+}
+
+/* Alert error styling */
+.alert-danger {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fca5a5;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* ==========================================================================
+   Admin Dashboard Component Utilities
+   ========================================================================== */
+
+/* Layout & Typography override */
+.main-content h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+.main-content p {
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+/* Modifikasi Grid & Box Form Input Baru */
+.crud-form-container {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+}
+.crud-form-container h3 {
+    margin-bottom: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+}
+.grid-3-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+/* Form Control Global Refinement */
+.form-control {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: #1e293b;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Form Inline khusus di dalam Tabel Operasional */
+.form-inline-table {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 0;
+}
+.input-table-price {
+    width: 100px !important;
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    border-radius: 6px !important;
+}
+.select-table-status {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    border-radius: 6px !important;
+    background-color: #fff;
+    border: 1px solid var(--border);
+    cursor: pointer;
+}
+
+/* Tombol Aksi */
+.btn-primary {
+    background-color: var(--primary);
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+.btn-block {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    margin-top: 14px;
+}
+
+/* Modifikasi Badge */
+.badge-secondary {
+    background: #f1f5f9;
+    color: #475569;
+}
+.badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Alert Box */
+.alert-warning {
+    background: #fef9c3;
+    color: #854d0e;
+    border-color: #fef08a;
+}
+
+/* ==========================================================================
+   Refinement untuk Kolom Aksi Operasional Tabel
+   ========================================================================== */
+
+/* Pastikan kolom aksi memiliki ruang yang cukup dan teks rata kiri/tengah */
+table th:last-child, 
+table td:last-child {
+    min-width: 260px;
+    max-width: 280px;
+    padding: 12px 16px !important;
+    vertical-align: middle;
+}
+
+/* Container utama pembungkus aksi */
+.action-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Jarak vertikal antara form ubah dan tombol hapus */
+}
+
+/* Form Inline untuk Update Data (Baris Atas) */
+.form-inline-table {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Jarak horizontal antar komponen input */
+    margin-bottom: 0;
+    width: 100%;
+}
+
+/* Input Harga di dalam tabel */
+.input-table-price {
+    flex: 1; /* Biar ukurannya dinamis mengisi ruang */
+    min-width: 90px;
+    padding: 8px 10px !important;
+    font-size: 13px !important;
+    border: 1px solid var(--border);
+    border-radius: 6px !important;
+    height: 34px;
     box-sizing: border-box;
+}
+
+/* Select Dropdown Status di dalam tabel */
+.select-table-status {
+    width: 95px !important;
+    padding: 0 10px !important;
+    font-size: 13px !important;
+    border-radius: 6px !important;
+    background-color: #ffffff;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    height: 34px;
+    box-sizing: border-box;
+}
+
+/* Tombol Ubah */
+.btn-update-inline {
+    padding: 0 12px !important;
+    height: 34px;
+    font-size: 13px !important;
+    font-weight: 500;
+    border-radius: 6px !important;
+    background-color: var(--primary);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+.btn-update-inline:hover {
+    background-color: #1d4ed8;
+}
+
+/* Area Destruktif / Baris Bawah (Tombol Hapus) */
+.action-destructive-zone {
+    display: flex;
+    justify-content: flex-end; /* Menggeser tombol hapus ke kanan agar simetris */
+    border-top: 1px solid #f1f5f9; /* Garis pemisah tipis */
+    padding-top: 8px;
+}
+
+/* Tombol Hapus Modern */
+.btn-delete-inline {
+    padding: 6px 12px !important;
+    font-size: 12px !important;
+    font-weight: 500;
+    color: #dc2626;
+    background-color: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 0;
+}
+.btn-delete-inline:hover {
+    color: #ffffff;
+    background-color: #dc2626;
+    border-color: #dc2626;
+}
+
+/* ==========================================================================
+   Perbaikan Struktur & Layout Tabel Validasi Reservasi
+   ========================================================================== */
+
+/* Memaksa konten di dalam cell tabel agar tidak pecah baris sembarangan */
+.main-content table th, 
+.main-content table td {
+    padding: 14px 12px;
+    vertical-align: middle;
+    white-space: nowrap; /* Mencegah teks melorot ke bawah */
+    font-size: 13px;
+}
+
+/* Biarkan kolom nama customer bisa membungkus text secara normal jika panjang */
+.main-content table td.col-customer {
+    white-space: normal !important;
+    line-height: 1.4;
+    min-width: 150px;
+}
+
+/* Mengatur spesifik lebar kolom agar proporsional */
+.w-booking    { width: 8%; }
+.w-customer   { width: 20%; }
+.w-vila       { width: 16%; }
+.w-klaster    { width: 10%; }
+.w-tanggal    { width: 12%; }
+.w-durasi     { width: 8%; }
+.w-total      { width: 13%; }
+.w-status     { width: 13%; }
+.w-aksi       { width: 12%; }
+
+
+/* ==========================================================================
+   Styling Halaman Login Modern & Minimalis (Tema Jaringan Vila)
+   ========================================================================== */
+.login-body {
+    background-color: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body {
-    background-color: #f4f6f9;
-    color: #333;
-    display: flex;
-    min-height: 100vh;
-}
-
-/* Kebutuhan Layout Multi-Role Admin (Sidebar) */
-.sidebar {
-    width: 260px;
-    background-color: #1e293b;
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.sidebar h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 20px;
-    color: #38bdf8;
-}
-
-.sidebar a {
-    color: #cbd5e1;
-    text-decoration: none;
-    padding: 12px 15px;
-    margin-bottom: 8px;
-    border-radius: 6px;
-    display: block;
-    transition: 0.3s;
-}
-
-.sidebar a:hover, .sidebar a.active {
-    background-color: #334155;
-    color: #fff;
-}
-
-.sidebar .logout {
-    margin-top: auto;
-    background-color: #ef4444;
-    color: white;
-    text-align: center;
-}
-
-.sidebar .logout:hover {
-    background-color: #dc2626;
-}
-
-.main-content {
-    flex: 1;
+.login-card {
+    background: #ffffff;
     padding: 40px;
-    overflow-y: auto;
-}
-
-/* Komponen Card & Tabel */
-.card {
-    background: #fff;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    margin-bottom: 25px;
-}
-
-h1, h2, h3 {
-    margin-bottom: 20px;
-}
-
-table {
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    background: #fff;
+    max-width: 400px;
+    box-sizing: border-box;
 }
 
-th, td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0;
+.login-header {
+    text-align: center;
+    margin-bottom: 28px;
 }
 
-th {
-    background-color: #0f172a;
-    color: white;
+.login-header h1 {
+    color: #0f172a;
+    font-size: 24px;
+    margin: 0 0 6px 0;
+    font-weight: 700;
 }
 
-tr:hover {
-    background-color: #f8fafc;
+.login-header p {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0;
 }
 
-/* Status Badges */
-.badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-}
-.badge-success { background-color: #dcfce7; color: #166534; }
-.badge-warning { background-color: #fef9c3; color: #854d0e; }
-.badge-danger { background-color: #fee2e2; color: #991b1b; }
-
-/* Form & Tombol Grafis */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-}
-
-.btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.2s;
-}
-
-.btn-primary { background-color: #0284c7; color: white; }
-.btn-primary:hover { background-color: #0369a1; }
-.btn-success { background-color: #16a34a; color: white; }
-.btn-success:hover { background-color: #15803d; }
-.btn-danger { background-color: #dc2626; color: white; }
-.btn-danger:hover { background-color: #b91c1c; }
-
-/* Kotak Alert Notifikasi Transaksi (Materi 4) */
-.alert {
-    padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 20px;
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 13px;
     font-weight: 500;
 }
-.alert-success { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-.alert-danger { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
-/* Layout Halaman Login */
-.login-container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.input-login {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #1e293b;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.input-login:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 11px;
+    background-color: #1e293b; /* Menyesuaikan warna sidebar admin */
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.btn-login:hover {
     background-color: #0f172a;
 }
-.login-box {
-    background: white;
-    padding: 40px;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+
+/* ==========================================================================
+   Sektor Perbaikan Table Layout (Anti-Meluber)
+   ========================================================================== */
+
+/* Memaksa tabel patuh pada lebar container pembungkusnya */
+.main-content table {
+    width: 100% !important;
+    table-layout: auto !important;
+    border-collapse: collapse;
+    margin-top: 16px;
+}
+
+/* Pengaturan padding & text-wrap cell demi estetika visual grid */
+.main-content table th, 
+.main-content table td {
+    padding: 12px 10px !important;
+    vertical-align: middle;
+    font-size: 13px;
+    white-space: normal !important; /* Mengizinkan teks panjang turun baris secara alami */
+    word-break: normal;
+}
+
+/* Kunci kolom sensitif data angka/nominal agar tidak patah berantakan */
+.main-content table td:nth-child(1), /* ID Booking */
+.main-content table td:nth-child(6), /* Durasi */
+.main-content table td:nth-child(7) { /* Total Bersih */
+    white-space: nowrap !important;
+}
+
+/* Pengaturan khusus kolom Nama Customer & Nama Vila */
+.main-content table td:nth-child(2) {
+    min-width: 130px;
+    font-weight: 600;
+}
+.main-content table td:nth-child(3) {
+    min-width: 100px;
+}
+
+/*========================================================= */
+.badge-warning {
+    background-color: #fef3c7;
+    color: #d97706;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.badge-success {
+    background-color: #dcfce7;
+    color: #017d1e;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.btn-danger {
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fee2e2;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+.btn-danger:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+    border-color: #dc2626;
 }

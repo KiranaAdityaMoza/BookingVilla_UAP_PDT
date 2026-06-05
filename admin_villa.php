@@ -23,17 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crud'])) {
         if ($action === 'INSERT') {
             $stmt = $pdo->prepare("CALL sp_manage_vila('INSERT', :id, :nama, :alamat, :klaster, :harga, :status)");
             $stmt->execute(['id'=>$id, 'nama'=>$nama, 'alamat'=>$alamat, 'klaster'=>$klaster, 'harga'=>$harga, 'status'=>$status]);
-            $message = "🟢 Berhasil Menambah Vila Baru via Stored Procedure!";
+            $message = "Berhasil Menambah Vila Baru via Stored Procedure!";
             $status_type = "success";
         } elseif ($action === 'UPDATE') {
             $stmt = $pdo->prepare("CALL sp_manage_vila('UPDATE', :id, '', '', '', :harga, :status)");
             $stmt->execute(['id'=>$id, 'harga'=>$harga, 'status'=>$status]);
-            $message = "🔵 Berhasil Memperbarui Properti via Stored Procedure!";
+            $message = "Berhasil Memperbarui Properti via Stored Procedure!";
             $status_type = "success";
         } elseif ($action === 'DELETE') {
             $stmt = $pdo->prepare("CALL sp_manage_vila('DELETE', :id, '', '', '', 0, '')");
             $stmt->execute(['id'=>$id]);
-            $message = "🔴 Berhasil Menghapus Vila via Stored Procedure!";
+            $message = "Berhasil Menghapus Vila via Stored Procedure!";
             $status_type = "success";
         }
     } catch (PDOException $e) {
@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action_crud'])) {
         <?php endif; ?>
 
         <div class="card">
-            <h2>📦 CRUD Pengelolaan Kamar Vila Cabang</h2>
+            <h2>CRUD Pengelolaan Kamar Vila Cabang</h2>
             <p style="color:#64748b; margin-bottom: 15px;">Menerapkan <b>Materi 6: Stored Procedure</b> menggunakan pemanggilan <code>CALL sp_manage_vila()</code> di backend PHP.</p>
             
             <form action="" method="POST" style="background:#f8fafc; padding:20px; border-radius:6px; margin-bottom:20px; border:1px solid #e2e8f0;">
