@@ -1,5 +1,5 @@
 -- CADANGAN DATABASE UAP VILLA 
--- Dibuat otomatis: 2026-06-05 00:55:29
+-- Dibuat otomatis: 2026-06-05 01:36:25
 
 -- Data Tabel customer 
 INSERT INTO customer VALUES ('1', 'Kirana Aditya Moza', '08123456789');
