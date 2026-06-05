@@ -11,10 +11,10 @@ $message = '';
 $status = '';
 
 if (isset($_POST['btn_backup'])) {
-    // Definisi folder tujuan yang absolut
+    // Jalur folder absolut mengarah ke folder 'backup' di dalam project
     $folder_target = __DIR__ . '/backup/';
     
-    // Pastikan folder ada
+    // Otomatis membuat folder 'backup' jika belum ada di dalam project
     if (!is_dir($folder_target)) {
         mkdir($folder_target, 0755, true);
     }
@@ -30,17 +30,21 @@ if (isset($_POST['btn_backup'])) {
             $data = $pdo->query("SELECT * FROM $t")->fetchAll();
             $sql .= "-- Data: $t\n";
             foreach ($data as $r) {
+                // Mengamankan string null atau tanda petik SQL query
                 $v = array_map(function($i) use ($pdo) { return $i === null ? 'NULL' : $pdo->quote($i); }, $r);
                 $sql .= "INSERT INTO $t VALUES (" . implode(', ', $v) . ");\n";
             }
             $sql .= "\n";
         }
         
+        // Menyimpan file ke dalam folder /backup/
         file_put_contents($path_lengkap, $sql);
-        $message = "Berhasil backup: " . $nama_file;
+        
+        // Mengubah pesan sukses agar admin tahu file masuk ke dalam folder khusus backup
+        $message = "💾 Sukses Backup! Berkas terkumpul aman di folder <b>backup/</b> dengan nama: <b>" . $nama_file . "</b>";
         $status = "success";
     } catch (Exception $e) {
-        $message = "Gagal: " . $e->getMessage();
+        $message = "Gagal melakukan pencadangan data: " . $e->getMessage();
         $status = "danger";
     }
 }
@@ -61,6 +65,7 @@ if (isset($_POST['btn_backup'])) {
         
         <div class="card">
             <h2>Manajemen Backup Database</h2>
+            <p style="color:#64748b; margin-bottom: 15px;">Fitur simulasi pencadangan data instan. File otomatis diorganisir ke dalam subfolder tersendiri.</p>
             <form method="POST">
                 <button type="submit" name="btn_backup" class="btn btn-success">Jalankan Backup Sekarang</button>
             </form>

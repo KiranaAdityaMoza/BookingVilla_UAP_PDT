@@ -100,9 +100,17 @@ if (isset($_GET['action_status']) && isset($_GET['id_b'])) {
 // [BONUS MATERI: BACKUP DATABASE INSTAN]
 // =========================================================================
 if (isset($_POST['btn_backup'])) {
+    // Samakan target foldernya dengan admin_backup.php
+    $folder_target = __DIR__ . '/backup/';
+    
+    if (!is_dir($folder_target)) {
+        mkdir($folder_target, 0755, true);
+    }
+
     $backup_file = 'backup_uap_villa_' . time() . '.sql';
+    $path_lengkap = $folder_target . $backup_file; // Mengarah ke dalam folder backup
+
     try {
-        // Mengambil semua baris data dari tabel utama untuk disimulasikan sebagai berkas .sql
         $tables = ['customer', 'users', 'vila', 'booking', 'log_pembatalan'];
         $sql_dump = "-- CADANGAN DATABASE UAP VILLA \n-- Dibuat otomatis: " . date('Y-m-d H:i:s') . "\n\n";
         
@@ -115,8 +123,10 @@ if (isset($_POST['btn_backup'])) {
             }
             $sql_dump .= "\n";
         }
-        file_put_contents($backup_file, $sql_dump);
-        $message = "💾 Sukses Backup! Berkas cadangan aman disimpan dengan nama: <b>$backup_file</b>";
+        
+        // Simpan ke path lengkap (di dalam folder backup)
+        file_put_contents($path_lengkap, $sql_dump);
+        $message = "💾 Sukses Backup! Berkas cadangan aman terkumpul di folder <b>backup/$backup_file</b>";
         $status_type = "success";
     } catch (Exception $e) {
         $message = "Backup gagal: " . $e->getMessage();
