@@ -4,16 +4,14 @@
    THEME TOKENS (Almond & Bistre Luxury Theme)
    ========================================== */
 :root {
-    /* Warna Palet Utama Jaringan Resort */
-    --bistre: #3D2B1F;          /* Cokelat Tua Premium (Brand Utama) */
-    --bistre-light: #5A4333;    /* Hover State / Layer Elemen */
-    --bistre-soft: #241912;     /* Deep Shadow Base */
-    --almond: #E1D2C1;          /* Krem Emas Aksen */
-    --almond-soft: #F4ECE3;     /* Muted Tone Accent */
-    --almond-light: #FBF9F6;    /* Latar Belakang Kamar/Halaman (Super Soft) */
+    --bistre: #3D2B1F;          
+    --bistre-light: #5A4333;    
+    --bistre-soft: #241912;     
+    --almond: #E1D2C1;          
+    --almond-soft: #F4ECE3;     
+    --almond-light: #FBF9F6;    
     --white: #FFFFFF;
     
-    /* Pengaturan Warna Teks & Komponen */
     --text-dark: #3D2B1F;       
     --text-muted: #806E60;      
     --border-color: #EFE8E1;
@@ -22,7 +20,6 @@
     --danger-soft: #FDF2F1;
     --danger-text: #A6261D;
 
-    /* Konstruksi Finansial Bayangan, Jarak, & Radius */
     --shadow-sm: 0 4px 15px rgba(61, 43, 31, 0.04);
     --shadow-md: 0 12px 30px rgba(61, 43, 31, 0.08);
     --shadow-premium: 0 15px 40px rgba(61, 43, 31, 0.06);
@@ -90,7 +87,6 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
     padding: 50px;
 }
 
-/* Kotak Kaca Login Kiri Dipergelap & Dipertajam Kontrasnya */
 .login-left-content {
     background: rgba(25, 17, 11, 0.72) !important; 
     backdrop-filter: blur(16px) !important;       
@@ -109,9 +105,8 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* Memperbaiki Teks Deskripsi Login yang Sebelumnya Redup Menjadi Cemerlang */
 .brand-tagline {
-    color: #FBF9F6 !important; /* Broken white cerah bersinar */
+    color: #FBF9F6 !important; 
     font-size: 14.5px !important;
     line-height: 1.7 !important;
     font-weight: 400 !important;
@@ -260,9 +255,9 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
     box-shadow: var(--shadow-premium-lg) !important;
     background-image: linear-gradient(
         135deg, 
-        rgba(12, 8, 4, 0.95) 0%,    /* Gelap pekat berlapis di sisi kiri agar teks terbaca tajam */
+        rgba(12, 8, 4, 0.95) 0%,    
         rgba(36, 25, 18, 0.88) 45%,   
-        rgba(90, 67, 51, 0.50) 100%   /* Transparan di sisi kanan agar arsitektur vila tetap mengintip */
+        rgba(90, 67, 51, 0.50) 100%   
     ), 
     url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1920&auto=format&fit=crop') !important;
     background-size: cover !important;
@@ -282,15 +277,13 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
     -webkit-backdrop-filter: blur(2px) !important;
     
     display: flex !important;
-    flex-direction: column !important; /* Susun vertikal dari atas ke bawah */
-    justify-content: center !important; /* Menaruh susunan teks tepat di TENGAH tinggi boks */
+    flex-direction: column !important; 
+    justify-content: center !important; 
     align-items: flex-start !important;
     
-    /* STRUKTUR AMAN: Memberi batas kiri 80px agar huruf "D" tidak terpotong bingkai putih luar */
     padding: 40px 40px 40px 80px !important; 
 }
 
-/* Memperbaiki Teks Judul Utama: Memaksa Warna Putih Bersinar Tanpa Efek Transparan Bocor */
 .welcome-banner h1, .luxury-banner h1 { 
     margin: 0 0 12px 0 !important; 
     padding: 0 !important;
@@ -311,7 +304,6 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
     text-shadow: 0 3px 15px rgba(0, 0, 0, 0.9) !important;
 }
 
-/* Memperbaiki Teks Paragraf Deskripsi Banner */
 .welcome-banner p, .luxury-banner p { 
     margin: 0 !important; 
     padding: 0 !important;
@@ -320,7 +312,7 @@ a { text-decoration: none; color: inherit; transition: var(--transition); }
     display: block !important;
     width: 100% !important;
     max-width: 700px !important;
-    color: #F4ECE3 !important; /* Krem terang kontras tinggi */
+    color: #F4ECE3 !important; 
     opacity: 1 !important;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8) !important;
     overflow: visible !important;
@@ -457,7 +449,6 @@ tbody tr:hover { background: #FAF7F2 !important; }
 .action-container { display: flex; gap: 8px; align-items: center; }
 .table-summary-row { background: #FDFBFA; font-weight: bold; }
 
-/* Status Badges & Alerts */
 .badge { 
     display: inline-flex; align-items: center; padding: 6px 14px !important; 
     border-radius: 30px !important; font-size: 11.5px !important; font-weight: 600; 

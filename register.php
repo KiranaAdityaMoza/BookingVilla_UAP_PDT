@@ -3,21 +3,11 @@ require_once 'config.php';
 session_start();
 
 if (isset($_SESSION['role'])) {
-    if ($_SESSION['role'] === 'admin') {
-        header('Location: admin_dashboard.php');
-    } else {
-        header('Location: customer_dashboard.php');
-    }
+    header('Location: ' . ($_SESSION['role'] === 'admin' ? 'admin_dashboard.php' : 'customer_dashboard.php'));
     exit;
 }
 
 $error = '';
-$success = '';
-
-if (isset($_SESSION['reg_success'])) {
-    $success = $_SESSION['reg_success'];
-    unset($_SESSION['reg_success']);
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username']);
@@ -25,32 +15,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!empty($username) && !empty($password)) {
         try {
-            $query = "SELECT u.*, c.nama 
-                      FROM users u 
-                      LEFT JOIN customer c ON u.id_customer_fk = c.id_customer 
-                      WHERE u.username = :username AND u.password = :password";
-
-            $stmt = $pdo->prepare($query);
-            $stmt->execute([
-                'username' => $username,
-                'password' => $password
-            ]);
-
-            $user = $stmt->fetch();
-
-            if ($user) {
-                $_SESSION['id_user']     = $user['id_user'];
-                $_SESSION['username']    = $user['username'];
-                $_SESSION['role']        = $user['role'];
-                $_SESSION['id_customer'] = $user['id_customer_fk'];
-                $_SESSION['nama_user']   = ($user['role'] === 'admin') ? 'Administrator' : ($user['nama'] ?? $user['username']);
-
-                header('Location: ' . ($user['role'] === 'admin' ? 'admin_dashboard.php' : 'customer_dashboard.php'));
-                exit;
+            $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+            $stmtCheck->execute(['username' => $username]);
+            
+            if ($stmtCheck->fetchColumn() > 0) {
+                $error = 'Username sudah terdaftar! Silakan gunakan nama lain.';
             } else {
-                $error = 'Username atau password salah!';
-            }
+                $queryInsert = "INSERT INTO users (username, password, role, id_customer_fk) 
+                                VALUES (:username, :password, 'customer', NULL)";
+                $stmtInsert = $pdo->prepare($queryInsert);
+                $stmtInsert->execute([
+                    'username' => $username,
+                    'password' => $password
+                ]);
 
+                $_SESSION['reg_success'] = 'Pendaftaran berhasil! Silakan login menggunakan akun baru Anda.';
+                header('Location: login.php');
+                exit;
+            }
         } catch (PDOException $e) {
             $error = 'Terjadi kesalahan sistem: ' . $e->getMessage();
         }
@@ -65,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Jaringan Booking Vila</title>
+    <title>Register - Jaringan Booking Vila</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -87,8 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-right">
         <div class="login-content">
             <div class="login-header">
-                <h2>Selamat Datang</h2>
-                <p>Silakan login untuk melanjutkan ke sistem</p>
+                <h2>Daftar Akun Baru</h2>
+                <p>Silakan isi username dan password Anda</p>
             </div>
 
             <?php if (!empty($error)): ?>
@@ -97,31 +79,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <?php if (!empty($success)): ?>
-                <div class="alert alert-success" style="background-color: #e6f4ea; color: #137333; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 14px;">
-                    <?= htmlspecialchars($success); ?>
-                </div>
-            <?php endif; ?>
-
             <form action="" method="POST" class="login-form">
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" class="form-control"
-                           placeholder="Masukkan username" required autocomplete="off">
+                           placeholder="Buat username" required autocomplete="off">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" class="form-control"
-                           placeholder="Masukkan password" required>
+                           placeholder="Buat password" required>
                 </div>
 
                 <button type="submit" class="btn-login">
-                    Masuk ke Sistem
+                    Daftar Akun
                 </button>
 
                 <p style="margin-top: 15px; text-align: center; font-size: 14px;">
-                    Belum punya akun? <a href="register.php" style="color: #0f172a; font-weight: 600; text-decoration: none;">Daftar di sini</a>
+                    Sudah punya akun? <a href="login.php" style="color: #0f172a; font-weight: 600; text-decoration: none;">Login di sini</a>
                 </p>
             </form>
         </div>

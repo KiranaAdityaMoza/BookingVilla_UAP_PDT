@@ -7,7 +7,8 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'customer') {
     exit;
 }
 
-$id_customer = $_SESSION['id_customer'];
+$id_user     = $_SESSION['id_user'];
+$id_customer = $_SESSION['id_customer']; 
 $message     = '';
 $status_type = '';
 
@@ -18,8 +19,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_booking'])) {
 
     if (!empty($id_vila) && !empty($tgl_checkin) && $durasi > 0) {
         try {
+            if (empty($id_customer)) {
+                $nama_sementara = $_SESSION['username'];
+                
+                $stmtNewCust = $pdo->prepare("INSERT INTO customer (nama) VALUES (:nama)");
+                $stmtNewCust->execute(['nama' => $nama_sementara]);
+                
+                $id_customer = $pdo->lastInsertId();
+
+                $stmtUpdateUser = $pdo->prepare("UPDATE users SET id_customer_fk = :id_cust WHERE id_user = :id_user");
+                $stmtUpdateUser->execute([
+                    'id_cust' => $id_customer,
+                    'id_user' => $id_user
+                ]);
+
+                $_SESSION['id_customer'] = $id_customer;
+                $_SESSION['nama_user']   = $nama_sementara;
+            }
+
             $checkin_baru  = date('Y-m-d', strtotime($tgl_checkin));
             $checkout_baru = date('Y-m-d', strtotime($tgl_checkin . " + " . $durasi . " days")); 
+            
             $queryCheck = "SELECT COUNT(*) FROM booking 
                            WHERE id_vila = :id_vila 
                            AND status_booking IN ('Pending', 'Paid')
@@ -121,7 +141,6 @@ $villas = $pdo->query("SELECT * FROM vila ORDER BY klaster ASC, id_vila ASC")->f
         <div class="grid-luxury-catalog">
             <?php foreach ($villas as $v): 
                 $badge_class = (strtolower($v['klaster']) == 'pantai') ? 'badge-success' : 'badge-warning';
-                
                 $is_tersedia = (strtolower($v['status']) == 'tersedia');
             ?>
                 <div class="card villa-booking-card" style="opacity: <?= $is_tersedia ? '1' : '0.85' ?>;">
