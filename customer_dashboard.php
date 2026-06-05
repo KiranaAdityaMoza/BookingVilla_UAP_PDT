@@ -18,34 +18,80 @@ $total_booking = $stmtCount->fetchColumn();
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Pelanggan - Jaringan Vila</title>
+    <title>Dashboard Pelanggan - Villaku</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="customer-body">
 
+    <!-- Memanggil navbar bawaan sistem kamu -->
     <?php include 'customer_navbar.php'; ?>
 
-    <div class="container">
-        <div class="card" style="background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; padding: 40px; border-radius: 12px;">
-            <h1 style="margin-bottom: 10px;">Selamat Datang Kembali, <?= htmlspecialchars($_SESSION['nama_user']); ?>!</h1>
-            <p style="font-size: 16px; opacity: 0.9;">Temukan kenyamanan menginap terbaik di klaster Puncak yang sejuk atau klaster Pantai kami yang eksotis.</p>
+    <div class="luxury-container animate-fade-up">
+        
+        <!-- BANNER WELCOME LUXURY RESORT THEME -->
+        <div class="luxury-banner">
+            <div class="banner-overlay-glass">
+                <span class="banner-badge">PREMIUM ESCAPE</span>
+                <h1>Selamat Datang Kembali,<br><span class="highlight-name"><?= htmlspecialchars($_SESSION['nama_user']); ?>!</span></h1>
+                <p>Temukan kenyamanan menginap terbaik di klaster Puncak yang sejuk atau klaster Pantai kami yang eksotis.</p>
+            </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-top: 20px;">
-            <div class="card" style="text-align: center; padding: 30px;">
-                <h3 style="color: #64748b; font-size: 14px; text-transform: uppercase;">Total Transaksi Kamu</h3>
-                <p style="font-size: 48px; font-weight: bold; color: #0f172a; margin: 15px 0;"><?= $total_booking; ?></p>
-                <a href="customer_riwayat.php" class="btn btn-primary" style="display: inline-block; text-decoration: none; font-size: 13px;">Lihat Riwayat</a>
+        <!-- LAYOUT GRID UTAMA -->
+        <div class="grid-luxury-dashboard">
+            
+            <!-- SISI KIRI: KARTU TOTAL TRANSAKSI MEWAH -->
+            <div class="card card-luxury-counter">
+                <div class="card-accent-line"></div>
+                <div class="icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="luxury-icon"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                </div>
+                <h3 class="card-luxury-subtitle">Total Transaksi Kamu</h3>
+                <p class="counter-luxury-number"><?= $total_booking; ?></p>
+                <a href="customer_riwayat.php" class="btn-luxury-action">
+                    <span>Lihat Riwayat</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
             </div>
 
-            <div class="card" style="padding: 30px;">
-                <h3>💡 Petunjuk Pemesanan</h3>
-                <ul style="margin-left: 20px; color: #475569; line-height: 1.8;">
-                    <li>Buka menu <b>Pesan Vila</b> untuk melihat katalog properti aktif kami.</li>
-                    <li>Sistem otomatis memberikan <b>Diskon 10%</b> melalui <i>Custom Function database</i> jika total sewa kamu di atas Rp 3.000.000.</li>
-                    <li>Setelah memesan, harap tunggu Admin memvalidasi pembayaran kamu di sistem pusat.</li>
-                </ul>
+            <!-- SISI KANAN: KARTU PETUNJUK PEMESANAN -->
+            <div class="card card-luxury-instructions">
+                <div class="card-accent-line"></div>
+                <h3 class="instruction-luxury-title">
+                    <span class="icon-sparkle">✨</span> Petunjuk Pemesanan Properti
+                </h3>
+                
+                <div class="instruction-step-wrapper">
+                    <div class="step-item">
+                        <div class="step-number">01</div>
+                        <div class="step-text">
+                            <h4>Eksplorasi Properti Cabang</h4>
+                            <p>Buka menu <b>Pesan Vila</b> untuk melihat galeri dan katalog seluruh properti resort aktif kami.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">02</div>
+                        <div class="step-text">
+                            <h4>Sistem Potongan Harga Otomatis</h4>
+                            <p>Sistem otomatis memberikan <span class="badge-discount">Diskon 10%</span> melalui <i>Custom Function database</i> jika total nilai sewa Anda berada di atas nominal Rp 3.000.000.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="step-item">
+                        <div class="step-number">03</div>
+                        <div class="step-text">
+                            <h4>Validasi &amp; Verifikasi Finansial</h4>
+                            <p>Setelah mengajukan pemesanan, harap tunggu konfirmasi dari pihak Admin untuk memvalidasi bukti pembayaran Anda di sistem pusat.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 

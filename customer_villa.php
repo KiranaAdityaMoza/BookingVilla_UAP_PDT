@@ -2,6 +2,7 @@
 require_once 'config.php';
 session_start();
 
+// Proteksi halaman
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'customer') {
     header('Location: login.php');
     exit;
@@ -103,54 +104,86 @@ $villas = $pdo->query("SELECT * FROM vila ORDER BY klaster ASC, id_vila ASC")->f
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Pesan Vila - Jaringan Vila</title>
+    <title>Pesan Vila - Villaku</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .grid-katalog { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .villa-card { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 20px; border: 1px solid #e2e8f0; }
-        .villa-klaster { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-bottom: 10px; }
-        .puncak { background-color: #dbeafe; color: #1e40af; }
-        .pantai { background-color: #fef3c7; color: #92400e; }
-    </style>
 </head>
-<body>
+<body class="customer-body">
 
     <?php include 'customer_navbar.php'; ?>
 
-    <div class="container">
+    <div class="luxury-container animate-fade-up">
+        
         <?php if (!empty($message)): ?>
             <div class="alert alert-<?= $status_type; ?>">
                 <?= $message; ?>
             </div>
         <?php endif; ?>
 
-        <h2 style="color: #1e293b; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-bottom: 5px;">🌟 Pilihan Properti Vila</h2>
-        <p style="color: #64748b; margin-bottom: 25px;">Sistem pintar otomatis mendeteksi ketersediaan jadwal secara <i>real-time</i> berdasarkan kalender pesanan lunas.</p>
+        <div class="section-title-premium">
+            <div class="title-heading-zone">
+                <span class="title-icon">🌟</span>
+                <h2>Pilihan Properti Vila</h2>
+            </div>
+            <p>Sistem pintar otomatis mendeteksi ketersediaan jadwal secara <i>real-time</i> berdasarkan kalender pesanan lunas.</p>
+        </div>
         
-        <div class="grid-katalog">
-            <?php foreach ($villas as $v): ?>
-                <div class="villa-card">
-                    <span class="villa-klaster <?= strtolower($v['klaster']); ?>">Klaster <?= $v['klaster']; ?></span>
-                    <h3 style="margin-bottom: 5px; color: #0f172a;"><?= htmlspecialchars($v['nama_vila']); ?></h3>
-                    <p style="font-size: 13px; color: #64748b; min-height: 40px; margin-bottom: 10px;"><?= htmlspecialchars($v['alamat']); ?></p>
-                    <p style="font-size: 16px; font-weight: bold; color: #0284c7; margin-bottom: 15px;">
-                        Rp <?= number_format($v['harga_per_malam'], 0, ',', '.'); ?> <span style="font-size: 12px; font-weight: normal; color: #64748b;">/ malam</span>
-                    </p>
+        <div class="grid-luxury-catalog">
+            <?php foreach ($villas as $v): 
+                $badge_class = (strtolower($v['klaster']) == 'pantai') ? 'badge-success' : 'badge-warning';
+                
+                // Evaluasi status ketersediaan unit dari database secara real-time
+                $is_tersedia = (strtolower($v['status']) == 'tersedia');
+            ?>
+                <div class="card villa-booking-card" style="opacity: <?= $is_tersedia ? '1' : '0.85' ?>;">
+                    <div class="card-accent-line"></div>
                     
-                    <form action="" method="POST" style="border-top: 1px dashed #e2e8f0; padding-top: 15px;">
+                    <div class="villa-booking-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <span class="badge <?= $badge_class ?>">Klaster <?= htmlspecialchars($v['klaster']); ?></span>
+                            
+                            <?php if ($is_tersedia): ?>
+                                <span class="badge badge-success" style="font-size: 11px; padding: 4px 10px;">🟢 Tersedia</span>
+                            <?php else: ?>
+                                <span class="badge badge-danger" style="font-size: 11px; padding: 4px 10px; background: #FCE8E6; color: #A6261D;">🔴 <?= htmlspecialchars($v['status']); ?></span>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <h3 class="villa-booking-title" style="margin-top: 15px;"><?= htmlspecialchars($v['nama_vila']); ?></h3>
+                        <p class="villa-booking-address"><?= htmlspecialchars($v['alamat']); ?></p>
+                    </div>
+
+                    <div class="villa-booking-price-zone">
+                        <span class="villa-price-amount">Rp <?= number_format($v['harga_per_malam'], 0, ',', '.'); ?></span>
+                        <span class="villa-price-label">/ malam</span>
+                    </div>
+                    
+                    <form action="" method="POST" class="villa-booking-form">
                         <input type="hidden" name="id_vila" value="<?= $v['id_vila']; ?>">
                         
-                        <div class="form-group">
-                            <label style="font-size: 12px; color: #475569;">Tanggal Check-In</label>
-                            <input type="date" name="tgl_checkin" min="<?= date('Y-m-d'); ?>" class="form-control" style="padding: 6px;" required>
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 15px;">
-                            <label style="font-size: 12px; color: #475569;">Durasi Menginap (Malam)</label>
-                            <input type="number" name="durasi_malam" min="1" max="30" class="form-control" style="padding: 6px;" value="1" required>
+                        <div class="form-grid-inputs">
+                            <div class="form-group-inline">
+                                <label>Tanggal Check-In</label>
+                                <input type="date" name="tgl_checkin" min="<?= date('Y-m-d'); ?>" class="form-control-luxury" <?= $is_tersedia ? '' : 'disabled' ?> required>
+                            </div>
+                            
+                            <div class="form-group-inline">
+                                <label>Durasi (Malam)</label>
+                                <div class="input-duration-wrapper">
+                                    <input type="number" name="durasi_malam" min="1" max="30" class="form-control-luxury input-number-luxury" value="1" <?= $is_tersedia ? '' : 'disabled' ?> required>
+                                    <span class="input-suffix">Malam</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <button type="submit" name="btn_booking" class="btn btn-success" style="width: 100%; padding: 8px;">Cek & Booking Unit</button>
+                        <?php if ($is_tersedia): ?>
+                            <button type="submit" name="btn_booking" class="btn-booking-submit">Cek &amp; Booking Unit</button>
+                        <?php else: ?>
+                            <button type="button" class="btn-booking-submit" style="background: #D5C2AF; color: #806E60; cursor: not-allowed;" disabled>Unit Penuh / Tidak Tersedia</button>
+                        <?php endif; ?>
                     </form>
                 </div>
             <?php endforeach; ?>
