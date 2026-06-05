@@ -125,53 +125,22 @@ if (isset($_POST['btn_backup'])) {
         }
         
         file_put_contents($path_lengkap, $sql_dump);
-        $message = "💾 Sukses Backup! Berkas cadangan aman terkumpul di folder <b>backup/$backup_file</b>";
-        $status_type = "success";
+        
+        // GUNAKAN SESSION BUKAN VARIABEL BIASA BIAR TIDAK HILANG SAAT REDIRECT
+        $_SESSION['msg'] = "💾 Sukses Backup! Berkas cadangan aman terkumpul di folder <b>backup/$backup_file</b>";
+        $_SESSION['msg_type'] = "success";
+        
+        // REDIRECT KEMBALI KE TAB PEMELIHARAAN UNTUK MENGHILANGKAN POST DATA
+        header("Location: admin_dashboard.php?tab=pemeliharaan");
+        exit;
     } catch (Exception $e) {
-        $message = "Backup gagal: " . $e->getMessage();
-        $status_type = "danger";
+        $_SESSION['msg'] = "Backup gagal: " . $e->getMessage();
+        $_SESSION['msg_type'] = "danger";
+        header("Location: admin_dashboard.php?tab=pemeliharaan");
+        exit;
     }
 }
 
-// =========================================================================
-// [SOLUSI PASTI] SIMULASI AUTOMATION BACKUP LANGSUNG VIA PHP NATIVE
-// =========================================================================
-if (isset($_POST['btn_backup_otomatis'])) {
-    $folder_target = __DIR__ . '/backup/';
-    
-    if (!is_dir($folder_target)) {
-        mkdir($folder_target, 0755, true);
-    }
-
-    $nama_file = 'backup_otomatis_' . date('Y-m-d_H-i-s') . '.sql';
-    $path_lengkap = $folder_target . $nama_file;
-    
-    try {
-        $tables = ['customer', 'users', 'vila', 'booking', 'log_pembatalan'];
-        $sql = "-- =====================================================\n";
-        $sql .= "-- [SIMULASI OTOMATIS] BAKCUP DATABASE BY SYSTEM SCHEDULER\n";
-        $sql .= "-- Dijalankan pada: " . date('Y-m-d H:i:s') . "\n";
-        $sql .= "-- =====================================================\n\n";
-        
-        foreach ($tables as $t) {
-            $data = $pdo->query("SELECT * FROM $t")->fetchAll();
-            $sql .= "-- Data Tabel: $t\n";
-            foreach ($data as $r) {
-                $v = array_map(function($i) use ($pdo) { return $i === null ? 'NULL' : $pdo->quote($i); }, $r);
-                $sql .= "INSERT INTO $t VALUES (" . implode(', ', $v) . ");\n";
-            }
-            $sql .= "\n";
-        }
-        
-        file_put_contents($path_lengkap, $sql);
-        
-        $message = "🤖 <b>Metode Otomatis Berhasil Disimulasikan!</b> Sistem berhasil menggenerasi berkas terjadwal ke dalam folder.";
-        $status_type = "success";
-    } catch (Exception $e) {
-        $message = "Gagal mensimulasikan backup otomatis: " . $e->getMessage();
-        $status_type = "danger";
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -450,19 +419,10 @@ if (isset($_POST['btn_backup_otomatis'])) {
                 <div class="card">
                     <h3 style="margin-bottom: 10px;">👨‍💻 Metode 1: Backup Manual</h3>
                     <p style="font-size: 13px; margin-bottom: 20px;">Membuat salinan database cadangan instan langsung via native PHP script system.</p>
-                    <form method="POST" action="">
+                    <form method="POST" action="admin_backup.php">
                         <button type="submit" name="btn_backup" class="btn-primary" style="width: 100%;">Jalankan Backup Manual</button>
                     </form>
                 </div>
-                
-                <div class="card">
-                    <h3 style="margin-bottom: 10px; color: var(--success);">🤖 Metode 2: Backup Otomatis</h3>
-                    <p style="font-size: 13px; margin-bottom: 20px;">Mensimulasikan pemicu task scheduler windows melalui eksekusi berkas <code>.bat</code> terprogram.</p>
-                    <form method="POST" action="">
-                        <button type="submit" name="btn_backup_otomatis" class="btn-success-luxury" style="width: 100%;">Jalankan Pemicu Otomatis (.BAT)</button>
-                    </form>
-                </div>
-            </div>
         <?php } ?>
 
     </div>

@@ -235,7 +235,7 @@ CREATE TABLE `vila` (
   `alamat` text NOT NULL,
   `klaster` enum('Puncak','Pantai') NOT NULL,
   `harga_per_malam` decimal(10,2) NOT NULL,
-  `status` enum('Tersedia','Disewa') DEFAULT 'Tersedia',
+  `status` enum('Tersedia','Tidak Tersedia') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'Tersedia',
   PRIMARY KEY (`id_vila`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -246,7 +246,7 @@ CREATE TABLE `vila` (
 
 LOCK TABLES `vila` WRITE;
 /*!40000 ALTER TABLE `vila` DISABLE KEYS */;
-INSERT INTO `vila` VALUES ('V01','Villa Kabut Pinus','Jl. Raya Cisarua No. 88, Puncak, Bogor, Jawa Barat','Puncak',750000.00,'Disewa'),('V02','Villa Arunika Hills','Jl. Bukit Pelangi No. 15, Megamendung, Puncak, Jawa Barat','Puncak',750000.00,'Tersedia'),('V03','Villa Panorama Puncak','Jl. Gunung Mas No. 27, Cisarua, Puncak, Jawa Barat','Puncak',650000.00,'Tersedia'),('V04','Villa Skyview Retreat','Jl. Taman Safari No. 42, Cibeureum, Puncak, Jawa Barat','Puncak',800000.00,'Tersedia'),('V05','Villa Pine Valley','Jl. Hutan Pinus No. 10, Megamendung, Puncak, Jawa Barat','Puncak',700000.00,'Tersedia'),('V06','Villa Ombak Biru','Jl. Pantai Selatan No. 12, Anyer, Banten','Pantai',1200000.00,'Tersedia'),('V07','Villa Sunset Cove','Jl. Karang Bolong No. 25, Anyer, Banten','Pantai',1100000.00,'Tersedia'),('V08','Villa Pasir Mutiara','Jl. Pantai Indah No. 7, Lampung Selatan, Lampung','Pantai',950000.00,'Tersedia'),('V09','Villa Sea Breeze','Jl. Teluk Harapan No. 18, Kalianda, Lampung','Pantai',1000000.00,'Tersedia'),('V10','Villa Samudra Indah','Jl. Pesisir Bahari No. 33, Pesawaran, Lampung','Pantai',900000.00,'Tersedia'),('V11','Villa Puncak Indah','Jl Puncak Indah No 12, Bogot, Jawa Barat','Puncak',100000.00,'Tersedia'),('V12','Villa Idaman','Jl Puncak Idaman No 15, Denpasar, Bali','Pantai',500000.00,'Tersedia');
+INSERT INTO `vila` VALUES ('V01','Villa Kabut Pinus','Jl. Raya Cisarua No. 88, Puncak, Bogor, Jawa Barat','Puncak',750000.00,'Tidak Tersedia'),('V02','Villa Arunika Hills','Jl. Bukit Pelangi No. 15, Megamendung, Puncak, Jawa Barat','Puncak',750000.00,'Tersedia'),('V03','Villa Panorama Puncak','Jl. Gunung Mas No. 27, Cisarua, Puncak, Jawa Barat','Puncak',650000.00,'Tersedia'),('V04','Villa Skyview Retreat','Jl. Taman Safari No. 42, Cibeureum, Puncak, Jawa Barat','Puncak',800000.00,'Tersedia'),('V05','Villa Pine Valley','Jl. Hutan Pinus No. 10, Megamendung, Puncak, Jawa Barat','Puncak',700000.00,'Tersedia'),('V06','Villa Ombak Biru','Jl. Pantai Selatan No. 12, Anyer, Banten','Pantai',1200000.00,'Tersedia'),('V07','Villa Sunset Cove','Jl. Karang Bolong No. 25, Anyer, Banten','Pantai',1100000.00,'Tersedia'),('V08','Villa Pasir Mutiara','Jl. Pantai Indah No. 7, Lampung Selatan, Lampung','Pantai',950000.00,'Tersedia'),('V09','Villa Sea Breeze','Jl. Teluk Harapan No. 18, Kalianda, Lampung','Pantai',1000000.00,'Tersedia'),('V10','Villa Samudra Indah','Jl. Pesisir Bahari No. 33, Pesawaran, Lampung','Pantai',900000.00,'Tersedia'),('V11','Villa Puncak Indah','Jl Puncak Indah No 12, Bogot, Jawa Barat','Puncak',100000.00,'Tersedia'),('V12','Villa Idaman','Jl Puncak Idaman No 15, Denpasar, Bali','Pantai',500000.00,'Tersedia');
 /*!40000 ALTER TABLE `vila` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -331,4 +331,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-05  8:57:53
+-- Dump completed on 2026-06-05 21:44:39
