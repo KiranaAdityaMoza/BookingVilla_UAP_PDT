@@ -2,7 +2,6 @@
 require_once 'config.php';
 session_start();
 
-// Jika sudah login, redirect
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] === 'admin') {
         header('Location: admin_dashboard.php');

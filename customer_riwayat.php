@@ -2,7 +2,6 @@
 require_once 'config.php';
 session_start();
 
-// Proteksi halaman
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'customer') {
     header('Location: login.php');
     exit;
@@ -10,7 +9,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'customer') {
 
 $id_customer = $_SESSION['id_customer'];
 
-// [MATERI 2: SQL JOIN] - Logika Query Asli Utuh 100%
 $queryHistory = "SELECT b.*, v.nama_vila, v.klaster 
                  FROM booking b 
                  INNER JOIN vila v ON b.id_vila = v.id_vila 
@@ -67,7 +65,6 @@ $historyData = $stmtHistory->fetchAll();
                         </tr>
                     <?php else: ?>
                         <?php foreach ($historyData as $h): 
-                            // Penentuan warna badge klaster wilayah
                             $badge_klaster = (strtolower($h['klaster']) == 'pantai') ? 'badge-success' : 'badge-warning';
                         ?>
                             <tr>

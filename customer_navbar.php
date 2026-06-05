@@ -1,5 +1,5 @@
 <?php
-// Pastikan session sudah dimulai di file utama sebelum memanggil navbar ini
+
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 

@@ -2,13 +2,11 @@
 require_once 'config.php';
 session_start();
 
-// Proteksi halaman
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'customer') {
     header('Location: login.php');
     exit;
 }
 
-// Ambil statistik ringkas untuk pajangan dashboard
 $id_customer = $_SESSION['id_customer'];
 $stmtCount = $pdo->prepare("SELECT COUNT(*) FROM booking WHERE id_customer = :id");
 $stmtCount->execute(['id' => $id_customer]);
@@ -27,12 +25,10 @@ $total_booking = $stmtCount->fetchColumn();
 </head>
 <body class="customer-body">
 
-    <!-- Memanggil navbar bawaan sistem kamu -->
     <?php include 'customer_navbar.php'; ?>
 
     <div class="luxury-container animate-fade-up">
         
-        <!-- BANNER WELCOME LUXURY RESORT THEME -->
         <div class="luxury-banner">
             <div class="banner-overlay-glass">
                 <span class="banner-badge">PREMIUM ESCAPE</span>
@@ -41,10 +37,8 @@ $total_booking = $stmtCount->fetchColumn();
             </div>
         </div>
 
-        <!-- LAYOUT GRID UTAMA -->
         <div class="grid-luxury-dashboard">
             
-            <!-- SISI KIRI: KARTU TOTAL TRANSAKSI MEWAH -->
             <div class="card card-luxury-counter">
                 <div class="card-accent-line"></div>
                 <div class="icon-wrapper">
@@ -58,7 +52,6 @@ $total_booking = $stmtCount->fetchColumn();
                 </a>
             </div>
 
-            <!-- SISI KANAN: KARTU PETUNJUK PEMESANAN -->
             <div class="card card-luxury-instructions">
                 <div class="card-accent-line"></div>
                 <h3 class="instruction-luxury-title">

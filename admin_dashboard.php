@@ -2,7 +2,6 @@
 require_once 'config.php';
 session_start();
 
-// Proteksi Halaman: Pastikan hanya Admin yang bisa masuk
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header('Location: login.php');
     exit;
@@ -57,7 +56,6 @@ if (isset($_GET['action_status']) && isset($_GET['id_b'])) {
 
     try {
         if ($act_status === 'Paid') {
-            // Validasi Pembayaran biasa & Ubah status vila jadi Tidak Tersedia
             $pdo->beginTransaction();
             $stmt1 = $pdo->prepare("UPDATE booking SET status_booking = 'Paid' WHERE id_booking = :id");
             $stmt1->execute(['id' => $id_b]);
@@ -73,8 +71,6 @@ if (isset($_GET['action_status']) && isset($_GET['id_b'])) {
             $message = "Pembayaran Berhasil Divalidasi!";
             $status_type = "success";
         } elseif ($act_status === 'Cancelled') {
-            // [BONUS MATERI: TRIGGER] Memicu trigger_pembatalan_lunas
-            // Jika status awalnya 'Paid' diubah jadi 'Cancelled', trigger otomatis mencatat ke log_pembatalan
             $pdo->beginTransaction();
             $stmtGetVila = $pdo->prepare("SELECT id_vila FROM booking WHERE id_booking = :id");
             $stmtGetVila->execute(['id' => $id_b]);
@@ -126,11 +122,9 @@ if (isset($_POST['btn_backup'])) {
         
         file_put_contents($path_lengkap, $sql_dump);
         
-        // GUNAKAN SESSION BUKAN VARIABEL BIASA BIAR TIDAK HILANG SAAT REDIRECT
         $_SESSION['msg'] = "💾 Sukses Backup! Berkas cadangan aman terkumpul di folder <b>backup/$backup_file</b>";
         $_SESSION['msg_type'] = "success";
         
-        // REDIRECT KEMBALI KE TAB PEMELIHARAAN UNTUK MENGHILANGKAN POST DATA
         header("Location: admin_dashboard.php?tab=pemeliharaan");
         exit;
     } catch (Exception $e) {
@@ -153,7 +147,6 @@ if (isset($_POST['btn_backup'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     
-    <!-- Tambahan Library SweetAlert2 Agar Pop-up Menjadi Cantik dan Mewah -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
@@ -353,7 +346,7 @@ if (isset($_POST['btn_backup'])) {
                                        Validasi
                                     </a>
                                 <?php elseif($r['status_booking'] == 'Paid'): ?>
-                                    <!-- Diubah onclick-nya agar memanggil SweetAlert instan -->
+        
                                     <a href="?tab=reservasi_global&action_status=Cancelled&id_b=<?= $r['id_booking'] ?>" 
                                        style="background-color: var(--danger-text); color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; display: inline-block;"
                                        onclick="konfirmasiPembatalan(event, this.href)">
@@ -448,26 +441,24 @@ if (isset($_POST['btn_backup'])) {
 
     </div>
 
-    <!-- Script Pembuat Pop-Up Interaktif Mewah -->
     <script>
     function konfirmasiPembatalan(event, redirectUrl) {
-        event.preventDefault(); // Menahan link asli agar tidak langsung pindah halaman
+        event.preventDefault(); 
         
         Swal.fire({
             title: 'Apakah Anda Yakin?',
             text: "Tindakan pembatalan transaksi lunas ini akan otomatis memicu Trigger sistem untuk mencatat Audit Log ke Log_Pembatalan!",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#ef4444', // Warna Merah Mewah
-            cancelButtonColor: '#6b7280',  // Warna Abu-abu Elegan
+            confirmButtonColor: '#ef4444', 
+            cancelButtonColor: '#6b7280',  
             confirmButtonText: 'Ya, Batalkan!',
             cancelButtonText: 'Batal',
-            background: '#fffdf9', // Menyerasikan dengan tone cream website-mu
-            color: '#4a3728',     // Font cokelat gelap elegan
+            background: '#fffdf9', 
+            color: '#4a3728',     
             borderRadius: '12px'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika admin klik "Ya, Batalkan!", jalankan URL proses triggernya
                 window.location.href = redirectUrl;
             }
         });

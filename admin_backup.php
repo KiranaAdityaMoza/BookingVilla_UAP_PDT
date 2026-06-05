@@ -7,7 +7,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-// 1. LOGIKA BACKUP MANUAL (Dengan Redirect agar tidak Resubmission)
 if (isset($_POST['btn_backup'])) {
     $folder_target = __DIR__ . '/backup/';
     if (!is_dir($folder_target)) {
@@ -33,9 +32,8 @@ if (isset($_POST['btn_backup'])) {
         
         file_put_contents($path_lengkap, $sql);
         
-        // Simpan pesan di session agar bisa tampil setelah redirect
         $_SESSION['status_backup'] = "Sukses! Berkas backup berhasil disimpan.";
-        header("Location: admin_backup.php"); // Pindah halaman untuk hilangkan POST
+        header("Location: admin_backup.php"); 
         exit; 
     } catch (Exception $e) {
         $_SESSION['status_backup'] = "Gagal: " . $e->getMessage();
@@ -44,7 +42,6 @@ if (isset($_POST['btn_backup'])) {
     }
 }
 
-// 2. PEMBACAAN LOG FILE (Untuk ditampilkan di tabel)
 $folder_backup = __DIR__ . '/backup/';
 $daftar_files = [];
 

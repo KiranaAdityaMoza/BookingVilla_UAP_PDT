@@ -2,7 +2,6 @@
 require_once 'config.php';
 session_start();
 
-// Proteksi halaman
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'customer') {
     header('Location: login.php');
     exit;
@@ -12,22 +11,15 @@ $id_customer = $_SESSION['id_customer'];
 $message     = '';
 $status_type = '';
 
-// Proses Simpan Transaksi Booking dengan Proteksi Jadwal Bentrok Akurat
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_booking'])) {
     $id_vila     = $_POST['id_vila'];
-    $tgl_checkin = $_POST['tgl_checkin']; // Format otomatis dari HTML: YYYY-MM-DD
+    $tgl_checkin = $_POST['tgl_checkin'];
     $durasi      = intval($_POST['durasi_malam']);
 
     if (!empty($id_vila) && !empty($tgl_checkin) && $durasi > 0) {
         try {
-            // 1. Amankan & Hitung Tanggal Check-In dan Check-Out dalam format standar SQL (YYYY-MM-DD)
             $checkin_baru  = date('Y-m-d', strtotime($tgl_checkin));
             $checkout_baru = date('Y-m-d', strtotime($tgl_checkin . " + " . $durasi . " days")); 
-            // Contoh: Masuk 03 Juni + 5 malam = Murni Check-out tanggal 08 Juni 2026
-
-            // 2. ALGORITMA OVERLAP CHECKING INTERNASIONAL
-            // Rumus: CheckIn_Baru < CheckOut_Lama DAN Checkout_Baru > CheckIn_Lama
-            // DATE_ADD(tgl_checkin, INTERVAL durasi_malam DAY) digunakan untuk menghitung tanggal checkout riwayat lama
             $queryCheck = "SELECT COUNT(*) FROM booking 
                            WHERE id_vila = :id_vila 
                            AND status_booking IN ('Pending', 'Paid')
@@ -47,11 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_booking'])) {
             $is_bentrok = $stmtCheck->fetchColumn();
 
             if ($is_bentrok > 0) {
-                // JIKA BENTROK: Tembak Peringatan Gagal
                 $message = "❌ Maaf, Vila ini sudah dipesan pada rentang tanggal tersebut. Silakan tentukan tanggal berkunjung yang lain!";
                 $status_type = "danger";
             } else {
-                // JIKA AMAN: Jalankan Query Pengisian Data
                 $stmtVila = $pdo->prepare("SELECT harga_per_malam FROM vila WHERE id_vila = :id");
                 $stmtVila->execute(['id' => $id_vila]);
                 $vila = $stmtVila->fetch();
@@ -60,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_booking'])) {
                     $harga_per_malam = $vila['harga_per_malam'];
                     $total_harga_asli = $harga_per_malam * $durasi;
 
-                    // [MATERI 5: CUSTOM FUNCTION]
                     $stmtDiskon = $pdo->prepare("SELECT GetDiskonVila(:total) AS nominal_potongan");
                     $stmtDiskon->execute(['total' => $total_harga_asli]);
                     $diskonData = $stmtDiskon->fetch();
@@ -68,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_booking'])) {
                     $potongan_diskon   = $diskonData['nominal_potongan'];
                     $total_bayar_bersih = $total_harga_asli - $potongan_diskon;
 
-                    // Simpan data transaksi ke tabel booking (status awal selalu 'Pending')
                     $queryInsert = "INSERT INTO booking (id_customer, id_vila, tgl_checkin, durasi_malam, total_harga_asli, potongan_diskon, total_bayar_bersih, status_booking) 
                                     VALUES (:id_cust, :id_v, :tgl, :durasi, :asli, :potongan, :bersih, 'Pending')";
                     
@@ -76,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_booking'])) {
                     $stmtInsert->execute([
                         'id_cust'   => $id_customer,
                         'id_v'      => $id_vila,
-                        'tgl'       => $checkin_baru, // Masuk format YYYY-MM-DD ke database
+                        'tgl'       => $checkin_baru, 
                         'durasi'    => $durasi,
                         'asli'      => $total_harga_asli,
                         'potongan'  => $potongan_diskon,
@@ -97,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['btn_booking'])) {
     }
 }
 
-// Mengambil semua daftar master vila untuk ditampilkan di katalog
 $villas = $pdo->query("SELECT * FROM vila ORDER BY klaster ASC, id_vila ASC")->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -135,7 +122,6 @@ $villas = $pdo->query("SELECT * FROM vila ORDER BY klaster ASC, id_vila ASC")->f
             <?php foreach ($villas as $v): 
                 $badge_class = (strtolower($v['klaster']) == 'pantai') ? 'badge-success' : 'badge-warning';
                 
-                // Evaluasi status ketersediaan unit dari database secara real-time
                 $is_tersedia = (strtolower($v['status']) == 'tersedia');
             ?>
                 <div class="card villa-booking-card" style="opacity: <?= $is_tersedia ? '1' : '0.85' ?>;">

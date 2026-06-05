@@ -8,7 +8,6 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
-// ================= DEADLOCK LOGIC (TETAP ASLI) =================
 if (isset($_GET['proses'])) {
     $proses = $_GET['proses'];
 
